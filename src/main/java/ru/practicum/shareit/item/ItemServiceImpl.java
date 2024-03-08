@@ -16,6 +16,8 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+
+
     @Override
     public List<ItemDto> getAllUserItems(Long userId) {
         if (userRepository.getUser(userId) == null) {
@@ -26,7 +28,6 @@ public class ItemServiceImpl implements ItemService {
         List<Item> items = itemRepository.getAllUserItems(userId);
         return ItemMapper.toItemDto(items);
     }
-
 
     @Override
     public ItemDto getItem(Long id) {
