@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         if (users != null && !users.isEmpty()) {
             for (User user : users) {
                 if (user.getEmail().equals(email)) {
-                    if (user.getId() != id) {
+                    if (!user.getId().equals(id)) {
                         return true;
                     }
                     return false;

@@ -20,7 +20,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     public List<Item> getAllUserItems(Long userId) {
         List<Item> userItems = new ArrayList<>();
         for (Item item : items.values()) {
-            if (item.getOwner() == userId) {
+            if (item.getOwner().equals(userId)) {
                 userItems.add(item);
             }
         }
@@ -51,7 +51,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             log.error(msg);
             throw new NotFoundException(msg);
         }
-        if (items.get(id).getOwner() != userId) {
+        if (!items.get(id).getOwner().equals(userId)) {
             String msg = "У данного пользователя нет права доступа редактировать данный обьект";
             log.error(msg);
             throw new NotFoundException(msg);
