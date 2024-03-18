@@ -55,6 +55,20 @@ public class ErrorHandler {
     }
 
     /**
+     * Handles ForbiddenException and returns an HTTP 403 Forbidden response.
+     *
+     * @param e The ForbiddenException that was thrown.
+     * @return An ErrorResponse containing the error message from the ForbiddenException.
+     */
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbiddenException(final ForbiddenException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    /**
      * Handles Throwable (general exception) and returns an INTERNAL_SERVER_ERROR response.
      *
      * @param e The Throwable.

@@ -1,24 +1,22 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.*;
+import ru.practicum.shareit.booking.dto.BookingInfoDto;
 
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ItemDto {
+public class ItemInfoDto {
     private Long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private String description;
-    @NotBlank
     private Boolean available;
+    private List<CommentInfoDto> comments;
+    private BookingInfoDto lastBooking;
+    private BookingInfoDto nextBooking;
 
-    public Boolean isAvailable() {
-        return available;
-    }
 }

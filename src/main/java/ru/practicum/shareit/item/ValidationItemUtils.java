@@ -11,7 +11,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ValidationUtils {
+public final class ValidationItemUtils {
 
     /**
      * Validates an ItemDto object. Check if item name is provided, if item description is provided,
