@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
         Booking lastBooking = getLastBooking(bookings);
         Booking nextBooking = getNextBooking(bookings);
         List<Comment> comments = commentRepository.findAllByItemOrderByIdAsc(item);
-        if (item.getOwner().getId() != userId) {
+        if (!item.getOwner().getId().equals(userId)) {
             return ItemMapper.toItemInfoDto(commentMapper, item, comments);
         }
         return ItemMapper.toItemInfoDto(bookingMapper, commentMapper, item, lastBooking, nextBooking, comments);
@@ -123,7 +123,8 @@ public class ItemServiceImpl implements ItemService {
     private Booking getNextBooking(List<Booking> bookings) {
         Booking nextBooking = null;
         for (Booking booking : bookings) {
-            if (booking.getStart().isAfter(LocalDateTime.now()) & booking.getApproved()) {
+
+            if (booking.getStart().isAfter(LocalDateTime.now()) && booking.getApproved()) {
                 if (nextBooking == null || booking.getStart().isBefore(nextBooking.getStart())) {
                     nextBooking = booking;
                 }

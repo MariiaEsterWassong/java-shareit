@@ -53,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getStatus().equals(BookingState.APPROVED)) {
             throw new ValidationException("Бронирование уже подтвеждено");
         }
-        if (approved.equals(true) & item.isAvailable()) {
+        if (approved && item.isAvailable()) {
             booking.setApproved(true);
             booking.setStatus(BookingState.APPROVED);
             booking = bookingRepository.save(booking);
