@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -17,16 +16,13 @@ import java.util.List;
 
 @Component
 public class CommentMapper {
-    private static ItemRepository itemRepository;
-    private static UserRepository userRepository;
 
-    @Autowired
-    public CommentMapper(ItemRepository itemRepository, UserRepository userRepository) {
-        this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
-    }
-
-    public static Comment toComment(Long authorId, Long itemId, CommentFromClientDto commentDto, LocalDateTime time) {
+    public static Comment toComment(ItemRepository itemRepository,
+                             UserRepository userRepository,
+                             Long authorId,
+                             Long itemId,
+                             CommentFromClientDto commentDto,
+                             LocalDateTime time) {
 
         Comment comment = new Comment();
         comment.setText(commentDto.getText());
@@ -42,13 +38,15 @@ public class CommentMapper {
 
     }
 
-    public static CommentDto toCommentDto(Comment comment) {
+    public static CommentDto toCommentDto(ItemMapper itemMapper,
+                                   UserMapper userMapper,
+                                   Comment comment) {
 
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
         commentDto.setText(comment.getText());
-        commentDto.setItem(ItemMapper.toItemDto(comment.getItem()));
-        commentDto.setAuthor(UserMapper.toUserDto(comment.getAuthor()));
+        commentDto.setItem(itemMapper.toItemDto(comment.getItem()));
+        commentDto.setAuthor(userMapper.toUserDto(comment.getAuthor()));
 
         return commentDto;
     }
@@ -74,11 +72,13 @@ public class CommentMapper {
         return result;
     }
 
-    public static List<CommentDto> toCommentDto(Iterable<Comment> comments) {
+    public static List<CommentDto> toCommentDto(ItemMapper itemMapper,
+                                         UserMapper userMapper,
+                                         Iterable<Comment> comments) {
         List<CommentDto> result = new ArrayList<>();
 
         for (Comment comment : comments) {
-            result.add(toCommentDto(comment));
+            result.add(toCommentDto(itemMapper, userMapper, comment));
         }
 
         return result;

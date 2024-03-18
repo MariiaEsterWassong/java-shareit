@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -24,6 +25,8 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final BookingMapper bookingMapper;
+    private final CommentMapper commentMapper;
 
 
     @Override
@@ -40,8 +43,13 @@ public class ItemServiceImpl implements ItemService {
             Booking lastBooking = getLastBooking(bookings);
             Booking nextBooking = getNextBooking(bookings);
             List<Comment> comments = commentRepository.findAllByItemOrderByIdAsc(item);
-            itemsInfoDto.add(ItemMapper.toItemInfoDto(item, lastBooking, nextBooking, comments));
-
+            itemsInfoDto.add(ItemMapper.toItemInfoDto(
+                    bookingMapper,
+                    commentMapper,
+                    item,
+                    lastBooking,
+                    nextBooking,
+                    comments));
         }
         return itemsInfoDto;
     }
@@ -55,15 +63,15 @@ public class ItemServiceImpl implements ItemService {
         Booking nextBooking = getNextBooking(bookings);
         List<Comment> comments = commentRepository.findAllByItemOrderByIdAsc(item);
         if (item.getOwner().getId() != userId) {
-            return ItemMapper.toItemInfoDto(item, comments);
+            return ItemMapper.toItemInfoDto(commentMapper, item, comments);
         }
-        return ItemMapper.toItemInfoDto(item, lastBooking, nextBooking, comments);
+        return ItemMapper.toItemInfoDto(bookingMapper, commentMapper, item, lastBooking, nextBooking, comments);
     }
 
     @Override
     public ItemDto saveItem(Long userId, ItemDto itemDto) {
 
-        Item item = itemRepository.save(ItemMapper.toItem(userId, itemDto));
+        Item item = itemRepository.save(ItemMapper.toItem(userRepository, userId, itemDto));
         return ItemMapper.toItemDto(item);
     }
 

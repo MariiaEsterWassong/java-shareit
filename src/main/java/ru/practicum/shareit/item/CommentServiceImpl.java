@@ -37,7 +37,12 @@ public class CommentServiceImpl implements CommentService {
                 true).isEmpty()) {
             throw new ValidationException("Не возможно оставить отзыв");
         } else {
-            Comment comment = commentRepository.save(CommentMapper.toComment(authorId, itemId, commentDto, LocalDateTime.now()));
+            Comment comment = commentRepository.save(CommentMapper.toComment(
+                    itemRepository,
+                    userRepository,
+                    authorId, itemId,
+                    commentDto,
+                    LocalDateTime.now()));
             return CommentMapper.toCommentInfoDto(comment);
         }
     }

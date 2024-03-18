@@ -19,16 +19,15 @@ import java.util.List;
 
 @Component
 public class BookingMapper {
-    private static ItemRepository itemRepository;
-    private static UserRepository userRepository;
 
     @Autowired
-    public BookingMapper(ItemRepository itemRepository, UserRepository userRepository) {
-        this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
+    public BookingMapper() {
     }
 
-    public static Booking toBooking(Long bookerId, BookingFromUserDto bookingDto) {
+    public static Booking toBooking(ItemRepository itemRepository,
+                                    UserRepository userRepository,
+                                    Long bookerId,
+                                    BookingFromUserDto bookingDto) {
 
         Booking booking = new Booking();
         booking.setStart(bookingDto.getStart());
@@ -50,25 +49,29 @@ public class BookingMapper {
 
     }
 
-    public static BookingDto toBookingDto(Booking booking) {
+    public static BookingDto toBookingDto(ItemMapper itemMapper,
+                                          UserMapper userMapper,
+                                          Booking booking) {
 
         BookingDto bookingDto = new BookingDto();
         bookingDto.setId(booking.getId());
         bookingDto.setStart(booking.getStart());
         bookingDto.setEnd(booking.getEnd());
-        bookingDto.setItem(ItemMapper.toItemDto(booking.getItem()));
-        bookingDto.setBooker(UserMapper.toUserDto(booking.getBooker()));
+        bookingDto.setItem(itemMapper.toItemDto(booking.getItem()));
+        bookingDto.setBooker(userMapper.toUserDto(booking.getBooker()));
         bookingDto.setStatus(booking.getStatus());
         bookingDto.setApproved(booking.getApproved());
 
         return bookingDto;
     }
 
-    public static List<BookingDto> toBookingDto(Iterable<Booking> bookings) {
+    public static List<BookingDto> toBookingDto(ItemMapper itemMapper,
+                                                UserMapper userMapper,
+                                                Iterable<Booking> bookings) {
         List<BookingDto> result = new ArrayList<>();
 
         for (Booking booking : bookings) {
-            result.add(toBookingDto(booking));
+            result.add(toBookingDto(itemMapper, userMapper, booking));
         }
 
         return result;
