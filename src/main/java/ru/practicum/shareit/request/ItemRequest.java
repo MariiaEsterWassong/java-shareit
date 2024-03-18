@@ -4,7 +4,6 @@ import lombok.*;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * TODO Sprint add-item-requests.
