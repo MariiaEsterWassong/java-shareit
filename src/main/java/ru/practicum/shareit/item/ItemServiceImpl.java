@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
-import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -25,9 +24,6 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
-    private final BookingMapper bookingMapper;
-    private final CommentMapper commentMapper;
-
 
     @Override
     public List<ItemInfoDto> getAllUserItems(Long userId) {
@@ -44,8 +40,6 @@ public class ItemServiceImpl implements ItemService {
             Booking nextBooking = getNextBooking(bookings);
             List<Comment> comments = commentRepository.findAllByItemOrderByIdAsc(item);
             itemsInfoDto.add(ItemMapper.toItemInfoDto(
-                    bookingMapper,
-                    commentMapper,
                     item,
                     lastBooking,
                     nextBooking,
@@ -63,9 +57,9 @@ public class ItemServiceImpl implements ItemService {
         Booking nextBooking = getNextBooking(bookings);
         List<Comment> comments = commentRepository.findAllByItemOrderByIdAsc(item);
         if (!item.getOwner().getId().equals(userId)) {
-            return ItemMapper.toItemInfoDto(commentMapper, item, comments);
+            return ItemMapper.toItemInfoDto(item, comments);
         }
-        return ItemMapper.toItemInfoDto(bookingMapper, commentMapper, item, lastBooking, nextBooking, comments);
+        return ItemMapper.toItemInfoDto(item, lastBooking, nextBooking, comments);
     }
 
     @Override

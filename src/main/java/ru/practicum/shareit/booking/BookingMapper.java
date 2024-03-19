@@ -1,7 +1,5 @@
 package ru.practicum.shareit.booking;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFromUserDto;
 import ru.practicum.shareit.booking.dto.BookingInfoDto;
@@ -17,12 +15,8 @@ import ru.practicum.shareit.user.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class BookingMapper {
 
-    @Autowired
-    public BookingMapper() {
-    }
+public class BookingMapper {
 
     public static Booking toBooking(ItemRepository itemRepository,
                                     UserRepository userRepository,
@@ -49,29 +43,25 @@ public class BookingMapper {
 
     }
 
-    public static BookingDto toBookingDto(ItemMapper itemMapper,
-                                          UserMapper userMapper,
-                                          Booking booking) {
+    public static BookingDto toBookingDto(Booking booking) {
 
         BookingDto bookingDto = new BookingDto();
         bookingDto.setId(booking.getId());
         bookingDto.setStart(booking.getStart());
         bookingDto.setEnd(booking.getEnd());
-        bookingDto.setItem(itemMapper.toItemDto(booking.getItem()));
-        bookingDto.setBooker(userMapper.toUserDto(booking.getBooker()));
+        bookingDto.setItem(ItemMapper.toItemDto(booking.getItem()));
+        bookingDto.setBooker(UserMapper.toUserDto(booking.getBooker()));
         bookingDto.setStatus(booking.getStatus());
         bookingDto.setApproved(booking.getApproved());
 
         return bookingDto;
     }
 
-    public static List<BookingDto> toBookingDto(ItemMapper itemMapper,
-                                                UserMapper userMapper,
-                                                Iterable<Booking> bookings) {
+    public static List<BookingDto> toBookingDto(Iterable<Booking> bookings) {
         List<BookingDto> result = new ArrayList<>();
 
         for (Booking booking : bookings) {
-            result.add(toBookingDto(itemMapper, userMapper, booking));
+            result.add(toBookingDto(booking));
         }
 
         return result;

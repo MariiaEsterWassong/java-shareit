@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -13,9 +12,8 @@ import ru.practicum.shareit.user.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class ItemMapper {
 
+public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
         ItemDto itemDto = new ItemDto();
@@ -28,10 +26,8 @@ public class ItemMapper {
     }
 
     public static ItemInfoDto toItemInfoDto(
-            BookingMapper bookingMapper,
-            CommentMapper commentMapper,
-            Item item, Booking
-            lastBooking,
+            Item item,
+            Booking lastBooking,
             Booking nextBooking,
             List<Comment> comments) {
         ItemInfoDto iteminfoDto = new ItemInfoDto();
@@ -40,23 +36,23 @@ public class ItemMapper {
         iteminfoDto.setDescription(item.getDescription());
         iteminfoDto.setAvailable(item.isAvailable());
         if (lastBooking != null) {
-            iteminfoDto.setLastBooking(bookingMapper.toBookingInfoDto(lastBooking));
+            iteminfoDto.setLastBooking(BookingMapper.toBookingInfoDto(lastBooking));
         }
         if (nextBooking != null) {
-            iteminfoDto.setNextBooking(bookingMapper.toBookingInfoDto(nextBooking));
+            iteminfoDto.setNextBooking(BookingMapper.toBookingInfoDto(nextBooking));
         }
-        iteminfoDto.setComments(commentMapper.toCommentInfoDto(comments));
+        iteminfoDto.setComments(CommentMapper.toCommentInfoDto(comments));
         return iteminfoDto;
 
     }
 
-    public static ItemInfoDto toItemInfoDto(CommentMapper commentMapper, Item item, List<Comment> comments) {
+    public static ItemInfoDto toItemInfoDto(Item item, List<Comment> comments) {
         ItemInfoDto iteminfoDto = new ItemInfoDto();
         iteminfoDto.setId(item.getId());
         iteminfoDto.setName(item.getName());
         iteminfoDto.setDescription(item.getDescription());
         iteminfoDto.setAvailable(item.isAvailable());
-        iteminfoDto.setComments(commentMapper.toCommentInfoDto(comments));
+        iteminfoDto.setComments(CommentMapper.toCommentInfoDto(comments));
         return iteminfoDto;
     }
 

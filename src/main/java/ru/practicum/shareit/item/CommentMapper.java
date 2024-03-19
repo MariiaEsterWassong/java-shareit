@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CommentFromClientDto;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class CommentMapper {
 
     public static Comment toComment(ItemRepository itemRepository,
@@ -38,15 +36,13 @@ public class CommentMapper {
 
     }
 
-    public static CommentDto toCommentDto(ItemMapper itemMapper,
-                                   UserMapper userMapper,
-                                   Comment comment) {
+    public static CommentDto toCommentDto(Comment comment) {
 
         CommentDto commentDto = new CommentDto();
         commentDto.setId(comment.getId());
         commentDto.setText(comment.getText());
-        commentDto.setItem(itemMapper.toItemDto(comment.getItem()));
-        commentDto.setAuthor(userMapper.toUserDto(comment.getAuthor()));
+        commentDto.setItem(ItemMapper.toItemDto(comment.getItem()));
+        commentDto.setAuthor(UserMapper.toUserDto(comment.getAuthor()));
 
         return commentDto;
     }
@@ -72,13 +68,11 @@ public class CommentMapper {
         return result;
     }
 
-    public static List<CommentDto> toCommentDto(ItemMapper itemMapper,
-                                         UserMapper userMapper,
-                                         Iterable<Comment> comments) {
+    public static List<CommentDto> toCommentDto(Iterable<Comment> comments) {
         List<CommentDto> result = new ArrayList<>();
 
         for (Comment comment : comments) {
-            result.add(toCommentDto(itemMapper, userMapper, comment));
+            result.add(toCommentDto(comment));
         }
 
         return result;

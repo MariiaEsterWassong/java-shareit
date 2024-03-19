@@ -62,6 +62,5 @@ public final class ValidationBookingUtils {
             throw new ValidationException(msg);
         }
 
-
     }
 }

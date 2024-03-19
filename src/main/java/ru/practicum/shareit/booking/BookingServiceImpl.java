@@ -7,11 +7,9 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingFromUserDto;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
@@ -25,9 +23,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final ItemMapper itemMapper;
-    private final UserMapper userMapper;
-
 
     @Override
     public BookingDto saveBooking(Long bookerId, BookingFromUserDto bookingDto) {
@@ -36,7 +31,7 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Не возможно создать бронирование");
         }
         booking = bookingRepository.save(booking);
-        return BookingMapper.toBookingDto(itemMapper, userMapper, booking);
+        return BookingMapper.toBookingDto(booking);
     }
 
     @Override
@@ -63,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
             booking = bookingRepository.save(booking);
         } else throw new ValidationException("Запрашиваемый обьект забронирован");
 
-        return BookingMapper.toBookingDto(itemMapper, userMapper, booking);
+        return BookingMapper.toBookingDto(booking);
 
     }
 
@@ -76,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
         if (!(booking.getBooker().getId().equals(userId) || booking.getItem().getOwner().getId().equals(userId))) {
             throw new NotFoundException("Нет прав доступа к бронированию");
         }
-        return BookingMapper.toBookingDto(itemMapper, userMapper, booking);
+        return BookingMapper.toBookingDto(booking);
     }
 
     @Override
@@ -87,20 +82,20 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case "ALL":
                 bookings = bookingRepository.findAllByBookerOrderByStartDesc(booker);
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "WAITING":
             case "REJECTED":
                 bookings = bookingRepository.findAllByBookerAndStatusOrderByStartDesc(booker, BookingState.from(state));
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "CURRENT":
                 bookings = bookingRepository.findAllByBookerAndStartIsBeforeAndEndIsAfterOrderByStartDesc(booker, LocalDateTime.now(), LocalDateTime.now());
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "PAST":
                 bookings = bookingRepository.findAllByBookerAndStatusAndEndIsBeforeOrderByStartDesc(booker, BookingState.from("APPROVED"), LocalDateTime.now());
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "FUTURE":
                 bookings = bookingRepository.findAllByBookerAndStartIsAfterOrderByStartDesc(booker, LocalDateTime.now());
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             default:
                 throw new ValidationException("Unknown state: " + state);
         }
@@ -118,28 +113,28 @@ public class BookingServiceImpl implements BookingService {
         switch (state) {
             case "ALL":
                 bookings = bookingRepository.findAllByItemIdInOrderByStartDesc(ownerItemsIds);
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "WAITING":
             case "REJECTED":
                 bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(owner, BookingState.from(state));
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "CURRENT":
                 bookings = bookingRepository.findByItemOwnerAndStartBeforeAndEndAfterOrderByStartDesc(
                         owner,
                         LocalDateTime.now(),
                         LocalDateTime.now());
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "PAST":
                 bookings = bookingRepository.findByItemOwnerAndStatusAndEndBeforeOrderByStartDesc(
                         owner,
                         BookingState.from("APPROVED"),
                         LocalDateTime.now());
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             case "FUTURE":
                 bookings = bookingRepository.findByItemOwnerAndStartAfterOrderByStartDesc(
                         owner,
                         LocalDateTime.now());
-                return BookingMapper.toBookingDto(itemMapper, userMapper, bookings);
+                return BookingMapper.toBookingDto(bookings);
             default:
                 throw new ValidationException("Unknown state: " + state);
         }
