@@ -50,7 +50,7 @@ public class UserController {
     @PostMapping
     public UserDto saveNewUser(@RequestBody UserDto user) {
         log.info("POST /users");
-        ValidationUtils.validateUserDtoSaved(user);
+        ValidationUserUtils.validateUserDtoSaved(user);
         return userService.saveUser(user);
     }
 

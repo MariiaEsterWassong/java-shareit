@@ -6,12 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import ru.practicum.shareit.exception.ValidationException;
 
-/**
- * Utility class for validating UserDto objects.
- */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ValidationUtils {
+public final class ValidationUserUtils {
 
     /**
      * Validates a UserDto object before saving. Check if email is provided and has correct format.

@@ -1,29 +1,37 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Data;
+import lombok.*;
+import ru.practicum.shareit.user.User;
 
-/**
- * TODO Sprint add-controllers.
- */
-@Data
+import javax.persistence.*;
+
+@Entity
+@Table(name = "items")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "available")
     private Boolean available;
-    private Long owner;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @Column(name = "request_id")
     private Long request;
-
-    public Item(Long id, String name, String description, boolean available, Long owner) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-        this.owner = owner;
-    }
-
-    public Item() {
-    }
 
     public Boolean isAvailable() {
         return available;
